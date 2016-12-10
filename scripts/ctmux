@@ -1,0 +1,5 @@
+#!/bin/sh
+tmux new-session -d 'vim'
+tmux split-window -v -p 30
+tmux new-window 'mutt'
+tmux -2 attach-session -d
