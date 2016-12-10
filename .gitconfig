@@ -1,7 +1,7 @@
 [user]
-	email = cyrill.guillemot@gmail.com
-	name = cyrillg
+  email = cyrill.guillemot@gmail.com
+  name = cyrillg
 [push]
-	default = simple
+  default = simple
 [core]
-        editor = vim
+  editor = vim
