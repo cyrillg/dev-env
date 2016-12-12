@@ -1,25 +1,37 @@
-#!/bin/bash
+#!/usr/bin/env python
 
-if [ $# -gt 0 ]; then
-    if [ "$1" = "ros" ]; then
-        tmux new-session -d 'vim'
-        tmux split-window -v -p 30
-        tmux split-window -h -p 25
-        tmux new-window 'mutt'
-        tmux -2 attach-session -d
-    elif [ "$1" = "rails" ]; then
-        tmux new-session -d 'vim'
-        tmux split-window -v -p 30
-        tmux new-window 'mutt'
-        tmux -2 attach-session -d
-    else
-        echo "Unknown env type"
-        echo "---> Available: ros|rails"
-    fi
-else
-    tmux new-session -d 'vim'
-    tmux split-window -v -p 30
-    tmux split-window -h -p 25
-    tmux new-window 'mutt'
-    tmux -2 attach-session -d
-fi
+import sys
+import subprocess as sp
+
+args = sys.argv
+
+def ros_env():
+    print "---> Launching ros env"
+    sp.call("tmux new-session -d \'vim\'",shell=True)
+    sp.call("tmux split-window -v -p 30",shell=True)
+    sp.call("tmux split-window -h -p 25",shell=True)
+    sp.call("tmux new-window \'mutt\'",shell=True)
+    sp.call("tmux -2 attach-session -d",shell=True)
+
+def rails_env():
+    print "---> Launching rails env"
+    sp.call("tmux new-session -d \'vim\'",shell=True)
+    sp.call("tmux split-window -v -p 30",shell=True)
+    sp.call("tmux new-window \'mutt\'",shell=True)
+    sp.call("tmux -2 attach-session -d",shell=True)
+
+env_builders = {"default": rails_env,
+                "ros": ros_env,
+                "rails": rails_env}
+
+env = "default"
+try:
+    if args[1] in env_builders:
+        env = args[1]
+    else:
+        print "Unknown env type\n \
+               ---> Available: ros|rails"
+except:
+    print "---> Falling back on default environment"
+
+env_builders[env]()
