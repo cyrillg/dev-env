@@ -1,5 +1,25 @@
-#!/bin/sh
-tmux new-session -d 'vim'
-tmux split-window -v -p 30
-tmux new-window 'mutt'
-tmux -2 attach-session -d
+#!/bin/bash
+
+if [ $# -gt 0 ]; then
+    if [ "$1" = "ros" ]; then
+        tmux new-session -d 'vim'
+        tmux split-window -v -p 30
+        tmux split-window -h -p 25
+        tmux new-window 'mutt'
+        tmux -2 attach-session -d
+    elif [ "$1" = "rails" ]; then
+        tmux new-session -d 'vim'
+        tmux split-window -v -p 30
+        tmux new-window 'mutt'
+        tmux -2 attach-session -d
+    else
+        echo "Unknown env type"
+        echo "---> Available: ros|rails"
+    fi
+else
+    tmux new-session -d 'vim'
+    tmux split-window -v -p 30
+    tmux split-window -h -p 25
+    tmux new-window 'mutt'
+    tmux -2 attach-session -d
+fi
