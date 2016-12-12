@@ -1,0 +1,47 @@
+#!/bin/bash
+
+echo $@
+
+
+idx=1
+echo "Tmux setup:"
+if [ -e $HOME/.tmux.conf ]; then
+    echo "---> Config found. Backing it up"
+    while [ -e $HOME/.tmux.conf.$idx ]
+    do
+        ((idx++))
+    done
+    mv $HOME/.tmux.conf $HOME/.tmux.conf.$idx
+fi
+echo "Installing custom setup"
+cp configs/.tmux.conf ~/
+echo ""
+
+
+idx=1
+echo "Git setup:"
+if [ -e $HOME/.gitconfig ]; then
+    echo "---> Config found. Backing it up"
+    while [ -e $HOME/.gitconfig.$idx ]
+    do
+        ((idx++))
+    done
+    mv $HOME/.gitconfig $HOME/.gitconfig.$idx
+fi
+echo "Installing custom setup"
+cp configs/.gitconfig ~/
+echo ""
+
+idx=1
+echo "Vim setup:"
+if [ -e $HOME/.vimrc ]; then
+    echo "---> Config found. Backing it up"
+    while [ -e $HOME/.vimrc.$idx ]
+    do
+        ((idx++))
+    done
+    mv $HOME/.vimrc $HOME/.vimrc.$idx
+fi
+echo "Installing custom setup"
+cp configs/.vimrc ~/
+echo ""
