@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo "Preparing to remove all previous versions of configs for:"
+echo " - tmux"
+echo " - vim"
+echo ""
+
+echo -n "Confirm (y/n): "
+read answer
+
+if [ $answer = "y" ]; then
+  rm $HOME/.tmux.conf.*
+  rm $HOME/.vimrc.*
+  echo "---> Removed"
+else
+  echo "---> Aborting"
+fi
