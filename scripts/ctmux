@@ -1,37 +1,42 @@
 #!/usr/bin/env python
 
-import sys
-import subprocess as sp
+import time
+from subprocess import call
 
-args = sys.argv
+def _cmd(cmd):
+    call(cmd,shell=True)
 
 def ros_env():
-    print "---> Launching ros env"
-    sp.call("tmux new-session -d \'vim\'",shell=True)
-    sp.call("tmux split-window -v -p 30",shell=True)
-    sp.call("tmux split-window -h -p 25",shell=True)
-    sp.call("tmux new-window \'mutt\'",shell=True)
-    sp.call("tmux -2 attach-session -d",shell=True)
+    _cmd("tmux new-session -d \'vim\'")
+    _cmd("tmux split-window -v -p 30")
+    _cmd("tmux split-window -h -p 25")
+    _cmd("tmux new-window \'mutt\'")
+    _cmd("tmux -2 attach-session -d")
 
 def rails_env():
-    print "---> Launching rails env"
-    sp.call("tmux new-session -d \'vim\'",shell=True)
-    sp.call("tmux split-window -v -p 30",shell=True)
-    sp.call("tmux new-window \'mutt\'",shell=True)
-    sp.call("tmux -2 attach-session -d",shell=True)
+    _cmd("tmux new-session -d \'vim\'")
+    _cmd("tmux split-window -v -p 30")
+    _cmd("tmux new-window \'mutt\'")
+    _cmd("tmux -2 attach-session -d")
 
-env_builders = {"default": rails_env,
-                "ros": ros_env,
+env_builders = {"ros": ros_env,
                 "rails": rails_env}
 
-env = "default"
-try:
-    if args[1] in env_builders:
-        env = args[1]
+default_env = "rails"
+
+env = default_env
+env_arg = str(raw_input('Specify the env type: [rails] '))
+
+if env_arg!="":
+    if env_arg in env_builders:
+        print "\n---> Launching the [{}] env".format(env_arg)
+        env = env_arg
     else:
-        print "Unknown env type\n \
-               ---> Available: ros|rails"
-except:
-    print "---> Falling back on default environment"
+        print "\n--->Unknown env type [{}]\n".format(env_arg)+ \
+               "---> Available: ros|rails"
+else:
+    print "\n---> Falling back on default environment [{}]".format(env)
+
+time.sleep(0.5)
 
 env_builders[env]()
