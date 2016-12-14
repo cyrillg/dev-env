@@ -5,5 +5,6 @@ highlight SpecialKey ctermbg=DarkMagenta
 set listchars=tab:>-,trail:~
 set list
 set autoread
-highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-match OverLength /\%79v.\+/
+set textwidth=80
+set colorcolumn=+1
+highlight ColorColumn ctermbg=DarkRed guibg=lightgrey
