@@ -16,11 +16,19 @@ def ros_env():
 def rails_env():
     _cmd("tmux new-session -d \'vim\'")
     _cmd("tmux split-window -v -p 30")
+    _cmd("tmux split-window -h -p 20")
     _cmd("tmux new-window \'mutt\'")
     _cmd("tmux -2 attach-session -d")
 
+def octave_env():
+    _cmd("tmux new-session -d \'vim\'")
+    _cmd("tmux new-window \'mutt\'")
+    _cmd("tmux split-window -h -p 50 -d \'octave --no-gui\'")
+    _cmd("tmux -2 attach-session -d")
+
 env_builders = {"ros": ros_env,
-                "rails": rails_env}
+                "rails": rails_env,
+                "oct": octave_env}
 
 default_env = "rails"
 
