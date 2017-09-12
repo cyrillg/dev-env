@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# Update the system
+apt-get update
+apt-get --assume-yes upgrade
+
+# Install python distros
+apt-get install python2.7-dev python3-dev
+
+# Install latest version of pip
+wget https://bootstrap.pypa.io/get-pip.py
+python get-pip.py
+
+# Install virtualenv and virtualenvwrapper
+pip install virtualenv virtualenvwrapper
+rm -rf ~/.cache/pip
+
+# Setup virtualenv and virtualenvwrapper
+echo -e "\n# virtualenv and virtualenvwrapper" >> ~/.bashrc
+echo "export WORKON_HOME=$HOME/.virtualenvs" >> ~/.bashrc
+echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
+
+# Allows the currently activated virtualenv to be activated in newly
+# spawned tmux sessions/windows/panels
+echo "if [ -n \"\$VIRTUAL_ENV\" ]; then" >> ~/.bashrc
+echo "  . \"\$VIRTUAL_ENV/bin/activate\"" >> ~/.bashrc
+echo "fi" >> ~/.bashrc
