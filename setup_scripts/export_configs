@@ -17,20 +17,19 @@ echo "Installing custom setup"
 cp configs/.tmux.conf ~/
 echo ""
 
-
-#idx=1
-#echo "Git setup:"
-#if [ -e $HOME/.gitconfig ]; then
-#    echo "---> Config found. Backing it up"
-#    while [ -e $HOME/.gitconfig.$idx ]
-#    do
-#        ((idx++))
-#    done
-#    mv $HOME/.gitconfig $HOME/.gitconfig.$idx
-#fi
-#echo "Installing custom setup"
-#cp configs/.gitconfig ~/
-#echo ""
+idx=1
+echo "Git setup:"
+if [ -e $HOME/.gitconfig ]; then
+    echo "---> Config found. Backing it up"
+    while [ -e $HOME/.gitconfig.$idx ]
+    do
+        ((idx++))
+    done
+    mv $HOME/.gitconfig $HOME/.gitconfig.$idx
+fi
+echo "Installing custom setup"
+cp configs/.gitconfig ~/
+echo ""
 
 idx=1
 echo "Vim setup:"
