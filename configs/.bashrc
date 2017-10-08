@@ -35,6 +35,8 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
+#source ~/.git-prompt.sh
+
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
@@ -70,32 +72,18 @@ if [ "$color_prompt" = yes ]; then
 
       if [[ ! $git_status == "" ]]; then
           if [[ ! $git_status =~ "working directory clean" ]]; then
-            echo -e " (*) "
+            echo -e " [*]"
           elif [[ $git_status =~ "Your branch is ahead of" ]]; then
-            echo -e " (*) "
+            echo -e " [*]"
           fi
       fi
     }
 
-    function git_branch {
-      local git_status="$(git status 2> /dev/null)"
-      local on_branch="On branch ([^${IFS}]*)"
-      local on_commit="HEAD detached at ([^${IFS}]*)"
-
-      if [[ $git_status =~ $on_branch ]]; then
-        local branch=${BASH_REMATCH[1]}
-        echo "$branch"
-      elif [[ $git_status =~ $on_commit ]]; then
-        local commit=${BASH_REMATCH[1]}
-        echo "$commit"
-      fi
-    }
-
     PS1="${debian_chroot:+\($debian_chroot)}\[\033[01;32m\]\u\[$COLOR_WHITE\]@\[\e[1;36m\]\h\[\033[00m\]:"
-    PS1+="\[$COLOR_WHITE\]\w "          # basename of pwd
-    PS1+="\[$COLOR_YELLOW\]\$(git_branch)"           # prints current branch
+    PS1+="\[$COLOR_WHITE\]\w"          # basename of pwd
+    PS1+="\[$COLOR_YELLOW\]\$(__git_ps1 ' (%s)')"           # prints current branch
     PS1+="\[$COLOR_RED\]\[\$(git_warning)\]"
-    PS1+="\[$COLOR_BLUE\]\$\[$COLOR_RESET\] "   # '#' for root, else '$'
+    PS1+=" \[$COLOR_BLUE\]\$\[$COLOR_RESET\] "   # '#' for root, else '$'
     export PS1
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
@@ -154,6 +142,7 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
 source /opt/ros/kinetic/setup.bash
 source ~/ros-playground/devel/setup.bash
 
