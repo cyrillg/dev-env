@@ -2,7 +2,6 @@
 
 echo $@
 
-
 idx=1
 echo "Tmux setup:"
 if [ -e $HOME/.tmux.conf ]; then
@@ -15,20 +14,6 @@ if [ -e $HOME/.tmux.conf ]; then
 fi
 echo "Installing custom setup"
 cp configs/.tmux.conf ~/
-echo ""
-
-idx=1
-echo "Git setup:"
-if [ -e $HOME/.gitconfig ]; then
-    echo "---> Config found. Backing it up"
-    while [ -e $HOME/.gitconfig.$idx ]
-    do
-        ((idx++))
-    done
-    mv $HOME/.gitconfig $HOME/.gitconfig.$idx
-fi
-echo "Installing custom setup"
-cp configs/.gitconfig ~/
 echo ""
 
 idx=1
