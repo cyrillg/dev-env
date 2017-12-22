@@ -17,6 +17,34 @@ cp configs/.tmux.conf ~/
 echo ""
 
 idx=1
+echo "Git setup:"
+if [ -e $HOME/.tmux.conf ]; then
+    echo "---> Config found. Backing it up"
+    while [ -e $HOME/.gitconfig.$idx ]
+    do
+        ((idx++))
+    done
+    mv $HOME/.gitconfig $HOME/.gitconfig.$idx
+fi
+echo "Installing custom setup"
+cp configs/.gitconfig ~/
+echo ""
+
+idx=1
+echo "Bash setup:"
+if [ -e $HOME/.bashrc ]; then
+    echo "---> Config found. Backing it up"
+    while [ -e $HOME/.bashrc.$idx ]
+    do
+        ((idx++))
+    done
+    mv $HOME/.bashrc $HOME/.bashrc.$idx
+fi
+echo "Installing custom setup"
+cp configs/.bashrc ~/
+echo ""
+
+idx=1
 echo "Vim setup:"
 if [ -e $HOME/.vimrc ]; then
     echo "---> Config found. Backing it up"
