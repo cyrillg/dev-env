@@ -1,0 +1,36 @@
+snippet launch "Launch file structure"
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+	${0:Content}
+
+</launch>
+endsnippet
+
+snippet argd "Argument with default"
+<arg name="${1:name}" default="${2:default_val}"/>
+endsnippet
+
+snippet argv "Argument with value"
+<arg name="${1:name}" value="${2:val}"/>
+endsnippet
+
+snippet node "Node"
+<node pkg="${1:package}" type="${2:type}" name="${3:type}"/>
+endsnippet
+
+snippet noden "Node with nested elements"
+<node pkg="${1:package}" type="${2:type}" name="${3:type}">
+	${4:<!-- details -->}
+</node>
+endsnippet
+
+snippet incl "Include"
+<include file="\$(find ${1:package_name})/${2:path_to_file}"/>
+endsnippet
+
+snippet incln "Include with nested elements"
+<include file="\$(find ${1:package_name})/${2:path_to_file}">
+	${4:<!-- details -->}
+</include>
+endsnippet
