@@ -119,8 +119,12 @@ autocmd BufNewFile,BufReadPost *.launch set filetype=roslaunch
 " -------------- YouCompleteMe config
 let g:ycm_global_ycm_extra_conf = '~/.vim/ycm_extra_conf.py'
 
-" -------------- ALE config
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_enter = -1
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
+
+" -------------- CtrlP config
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlPMixed'
