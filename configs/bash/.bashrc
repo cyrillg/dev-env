@@ -42,6 +42,13 @@ case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
 esac
 
+# chech whether we are in tmux or not
+if ! { [ "$TERM" = "screen-256color" ] && [ -n "$TMUX" ]; } then
+  TMUX_SHELL=no
+else
+  TMUX_SHELL=yes
+fi
+
 # uncomment for a colored prompt, if the terminal has the capability; turned
 # off by default to not distract the user: the focus in a terminal window
 # should be on the output of commands, not on the prompt
@@ -76,22 +83,42 @@ if [ "$color_prompt" = yes ]; then
       if [[ ! $git_status == "" ]]; then
           if [[ ! $git_status =~ "working directory clean" ]]; then
             echo " [*]"
-            #return 0
           elif [[ $git_status =~ "Your branch is ahead of" ]]; then
             echo " [*]"
-            #return 0
           fi
       fi
     }
 
     PS1="${debian_chroot:+\($debian_chroot)}"
-    #PS1+="\[\033[01;32m\]\u\[$COLOR_WHITE\]@\[\e[1;36m\]\h\[\033[00m\]:"
-    PS1+="\[$COLOR_OCHRE\][host] \[$COLOR_DEFAULT_FG\]"
-    PS1+="\[$COLOR_BLUE\]\u\[$COLOR_WHITE\]\[$COLOR_DEFAULT_FG\]:"
-    PS1+="\[$COLOR_WHITE\]\w\[$COLOR_DEFAULT_FG\]"          # basename of pwd
-    PS1+="\[$COLOR_YELLOW\]\$(__git_ps1 ' (%s)')\[$COLOR_DEFAULT_FG\]"           # prints current branch
-    PS1+="\[$COLOR_RED\]\$(git_warning)\[$COLOR_DEFAULT_FG\]"
-    PS1+=" \[$COLOR_BLUE\]\$\[$COLOR_DEFAULT_FG\]\[$RESET_ALL\] "   # '#' for root, else '$'
+
+    if [ "$TMUX_SHELL" = "yes" ]; then
+      function tmux_PS1 {
+        local git_status="$(git status 2> /dev/null)"
+
+        if [[ ! $git_status == "" ]]; then
+          if [[ ! $git_status =~ "working directory clean" ]]; then
+            echo -e "$COLOR_RED"
+          elif [[ $git_status =~ "Your branch is ahead of" ]]; then
+            echo -e "$COLOR_RED"
+          else
+            echo -e "$COLOR_LIGHT_GREEN"
+          fi
+        else
+            echo -e "$COLOR_BLUE"
+        fi
+      }
+
+      PS1+="\[\$(tmux_PS1)\]➔ \[$RESET_ALL\]" #"\$(tmux_PS1)➔ $RESET_ALL"
+
+    else
+      PS1+="\[$COLOR_OCHRE\][host] \[$COLOR_DEFAULT_FG\]"
+      PS1+="\[$COLOR_BLUE\]\u\[$COLOR_WHITE\]\[$COLOR_DEFAULT_FG\]:"
+      PS1+="\[$COLOR_WHITE\]\w\[$COLOR_DEFAULT_FG\]"          # basename of pwd
+      PS1+="\[$COLOR_YELLOW\]\$(__git_ps1 ' (%s)')\[$COLOR_DEFAULT_FG\]"           # prints current branch
+      PS1+="\[$COLOR_RED\]\$(git_warning)\[$COLOR_DEFAULT_FG\]"
+      PS1+=" \[$COLOR_BLUE\]\$\[$COLOR_DEFAULT_FG\]\[$RESET_ALL\] "   # '#' for root, else '$'
+    fi
+
     export PS1
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
@@ -106,28 +133,6 @@ xterm*|rxvt*)
 *)
     ;;
 esac
-
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
-
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -lF'
-
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
@@ -144,3 +149,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
+export PATH=$PATH:~/.vimpkg/bin
+
+source /opt/ros/kinetic/setup.bash

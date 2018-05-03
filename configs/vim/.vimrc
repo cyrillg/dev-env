@@ -6,7 +6,6 @@ call vundle#rc()
 
 Plugin 'gmarik/vundle'
 
-" Plugin 'scrooloose/syntastic'
 Plugin 'w0rp/ale'
 Plugin 'valloric/YouCompleteMe'
 
@@ -31,6 +30,7 @@ Plugin 'bling/vim-airline'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'konfekt/fastfold'
 Plugin 'tmhedberg/simpylfold'
+Plugin 'danro/rename.vim'
 
 Plugin 'dikiaap/minimalist'
 Plugin 'altercation/vim-colors-solarized'
@@ -74,13 +74,17 @@ let g:NERDTrimTrailingWhitespace = 1
 " set t_Co=256
 syntax enable
 " set background=light
-let g:solarized_termcolors=256
+" let g:solarized_termcolors=256
 " colorscheme solarized
 colorscheme minimalist
 
 " -------------- Airline status bar config
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme='angr'
+let g:bufferline_echo = 0
+
+" -------------- Fugitive config
+set diffopt+=vertical
 
 " -------------- Git gutter config
 set updatetime=100 " Reduce vim update time to make the diff gutter apear/update faster
@@ -92,7 +96,7 @@ set softtabstop=4
 set expandtab
 set shiftwidth=4
 set smarttab
-highlight SpecialKey ctermbg=DarkMagenta
+" highlight SpecialKey ctermbg=DarkMagenta
 set formatoptions=coql
 
 " -------------- Folding config
@@ -110,6 +114,7 @@ set cursorcolumn
 set cursorline
 highlight ColorColumn ctermbg=LightGrey guibg=lightgrey
 autocmd FileType c,cpp,python,roslaunch,vim autocmd BufWritePre <buffer> %s/\s\+$//e
+autocmd VimResized * wincmd =
 
 " -------------- Filetype matching
 autocmd BufNewFile,BufReadPost *.ino,*.pde set filetype=cpp
@@ -119,6 +124,7 @@ autocmd BufNewFile,BufReadPost *.launch set filetype=roslaunch
 " -------------- YouCompleteMe config
 let g:ycm_global_ycm_extra_conf = '~/.vim/ycm_extra_conf.py'
 
+" -------------- Airline status bar config
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_enter = -1
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
@@ -128,3 +134,20 @@ nmap <silent> <C-j> <Plug>(ale_next_wrap)
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlPMixed'
+nnoremap <Leader>rp2 :echo system('python2 "' . expand('%') . '"')<cr>
+nnoremap <Leader>rp3 :echo system('python3 "' . expand('%') . '"')<cr>
+nnoremap <Leader>rb :echo system('bash "' . expand('%') . '"')<cr>
+
+let g:ctrlp_max_depth = 40
+
+set ttimeoutlen=50 " Make airline mode update faster
+
+" File diff mappings
+nnoremap <Leader>wt :windo diffthis<cr>
+nnoremap <Leader>wo :windo diffoff<cr>
+
+" Buffer navigation mappings
+nnoremap <Tab> :bnext<CR>
+nnoremap <Tab> :bnext<CR>
+nnoremap <S-Tab> :bprevious<CR>
+nnoremap <C-X> :bdelete<CR>
