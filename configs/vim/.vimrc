@@ -6,18 +6,13 @@ call vundle#rc()
 
 Plugin 'gmarik/vundle'
 
-Plugin 'w0rp/ale'
-Plugin 'valloric/YouCompleteMe'
+Plugin 'dense-analysis/ale'
 
-Plugin 'tpope/vim-fugitive'
 Plugin 'airblade/vim-gitgutter'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
 
 Plugin 'taketwo/vim-ros'
 
 Plugin 'surround.vim'
-Plugin 'sirver/ultisnips'
-Plugin 'honza/vim-snippets'
 Plugin 'yggdroot/indentline'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'godlygeek/tabular'
@@ -28,21 +23,13 @@ Plugin 'scrooloose/nerdtree.git'
 Plugin 'Buffergator'
 Plugin 'bling/vim-airline'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'konfekt/fastfold'
-Plugin 'tmhedberg/simpylfold'
 Plugin 'danro/rename.vim'
+Plugin 'easymotion/vim-easymotion'
 
-Plugin 'dikiaap/minimalist'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'vim-airline/vim-airline-themes'
 
 filetype plugin indent on
-
-" -------------- UltiSnip config
-set runtimepath+=~/.vim/my-snippets
-let g:UltiSnipsExpandTrigger="<c-x>"
-let g:UltiSnipsJumpForwardTrigger="<c-l>"
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 
 " -------------- NERD Tree config
 " Automatically spawns NERD tree when opening Vim
@@ -75,16 +62,11 @@ let g:NERDTrimTrailingWhitespace = 1
 syntax enable
 " set background=light
 " let g:solarized_termcolors=256
-" colorscheme solarized
-colorscheme minimalist
 
 " -------------- Airline status bar config
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme='angr'
 let g:bufferline_echo = 0
-
-" -------------- Fugitive config
-set diffopt+=vertical
 
 " -------------- Git gutter config
 set updatetime=100 " Reduce vim update time to make the diff gutter apear/update faster
@@ -98,9 +80,6 @@ set shiftwidth=4
 set smarttab
 " highlight SpecialKey ctermbg=DarkMagenta
 set formatoptions=coql
-
-" -------------- Folding config
-au BufRead * normal zR
 
 " -------------- Window splitting behaviour
 set splitbelow
@@ -121,12 +100,29 @@ autocmd BufNewFile,BufReadPost *.ino,*.pde set filetype=cpp
 autocmd BufNewFile,BufReadPost *.urdf,*.world,*.sdf set filetype=xml
 autocmd BufNewFile,BufReadPost *.launch set filetype=roslaunch
 
-" -------------- YouCompleteMe config
-let g:ycm_global_ycm_extra_conf = '~/.vim/ycm_extra_conf.py'
-
-" -------------- Airline status bar config
+" -------------- Ale config
+let g:ale_python_flake8_executable = 'python3'
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_enter = -1
+let g:ale_linters_explicit = -1
+let g:ale_linters = {'cpp': ['cland', 'g++'], 'python': ['flake8']}
+
+" find ros headers
+function! UpdateROSIncludeDirs()
+    let l:ros_package_path=split($ROS_PACKAGE_PATH, ':')
+    let l:cmake_prefix_path=split($CMAKE_PREFIX_PATH, ':')
+    let l:paths=l:ros_package_path+l:cmake_prefix_path
+    for path in l:paths
+        if len($CPATH)
+            let $CPATH.=':'.path.'/include'
+        else
+            let $CPATH.=path.'/include'
+        endif
+    endfor
+endfunction
+
+call UpdateROSIncludeDirs()
+
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
@@ -148,6 +144,11 @@ nnoremap <Leader>wo :windo diffoff<cr>
 
 " Buffer navigation mappings
 nnoremap <Tab> :bnext<CR>
-nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 nnoremap <C-X> :bdelete<CR>
+
+" Easy Motion search config
+nmap / <Plug>(easymotion-tn)
+
+" Remapping
+inoremap kj <ESC>
